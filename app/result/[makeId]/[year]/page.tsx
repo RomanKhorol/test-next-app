@@ -3,6 +3,7 @@ import { CarType } from "@/models/carType";
 import Car from "@/components/Car";
 import { Metadata } from "next";
 import { StaticParams } from "@/models/statisParamsType";
+import Link from "next/link";
 
 async function getMakes() {
   try {
@@ -12,10 +13,11 @@ async function getMakes() {
     }
     const data = await response.json();
 
-    if (Array.isArray(data.Results)) {
-      return data.Results.map((make: CarType) => make.Make_ID);
+    if (Array.isArray(data)) {
+      return data;
     } else {
-      throw new Error("Results is not an array");
+      console.error("Results is not an array or missing", data.Results);
+      return [];
     }
   } catch (error) {
     console.error("Fetch error:", error);
@@ -79,6 +81,14 @@ export default async function ResultPage({
           <p className="text-center text-gray-500">No cars available</p>
         )}
       </ul>
+      <div className="text-center mb-6">
+        <Link
+          href="/"
+          className=" mt-10 inline-block bg-blue-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-200"
+        >
+          Go to Search Page
+        </Link>
+      </div>
     </div>
   );
 }

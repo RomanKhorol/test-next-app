@@ -4,7 +4,7 @@ export async function GET(
   request: Request,
   { params }: { params: { makeId: string; year: string } },
 ) {
-  const { makeId, year } = params;
+  const { makeId, year } = await params;
 
   try {
     const response = await fetch(
