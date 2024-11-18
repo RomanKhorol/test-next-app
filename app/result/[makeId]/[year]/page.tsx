@@ -1,9 +1,10 @@
 // app/result/[makeId]/[year]/page.tsx
-import { CarType } from "@/models/carType";
+import { CarType, CarType2 } from "@/models/carType";
 import Car from "@/components/Car";
 import { Metadata } from "next";
 import { StaticParams } from "@/models/statisParamsType";
 import Link from "next/link";
+import { FC } from "react";
 
 async function getMakes() {
   try {
@@ -16,7 +17,7 @@ async function getMakes() {
     if (Array.isArray(data)) {
       return data;
     } else {
-      console.error("Results is not an array or missing", data.Results);
+      console.error("Data is not an array or missing", data);
       return [];
     }
   } catch (error) {
@@ -29,38 +30,31 @@ const years = Array.from({ length: 10 }, (_, i) => 2024 - i);
 
 export async function generateStaticParams() {
   const makes = await getMakes();
-  const staticParams: StaticParams[] = [];
-
-  for (const makeId of makes) {
-    years.forEach((year) => {
-      staticParams.push({
-        makeId: makeId.toString(),
-        year: year.toString(),
-      });
-    });
-  }
-
+  const staticParams: StaticParams[] = makes.flatMap((make) =>
+    years.map((year) => ({
+      makeId: make.MakeId.toString(),
+      year: year.toString(),
+    })),
+  );
+  console.log(staticParams);
   return staticParams;
 }
 
-export const metadata: Metadata = {
-  title: "Find Cars",
-};
-
-async function getCars(makeId: string, year: string) {
-  const response = await fetch(
-    `http://localhost:3000/api/cars/${makeId}/${year}`,
-  );
-  return response.json();
+interface Props {
+  makeId: string;
+  year: string;
 }
 
 export default async function ResultPage({
   params,
 }: {
-  params: { makeId: string; year: string };
+  params: Promise<StaticParams>;
 }) {
   const { makeId, year } = await params;
-  const cars = await getCars(makeId, year);
+  const response = await fetch(
+    `http://localhost:3000/api/cars/${makeId}/${year}`,
+  );
+  const cars = await response.json();
 
   return (
     <div className="p-4 bg-gray-100 min-h-screen">

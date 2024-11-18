@@ -12,12 +12,7 @@ export async function GET() {
 
     const { Results } = await response.json();
 
-    const formattedResults = Results.map((make: any) => ({
-      id: make.MakeId,
-      name: make.MakeName,
-    }));
-
-    return NextResponse.json(formattedResults);
+    return NextResponse.json(Results);
   } catch (error: any) {
     return NextResponse.json(
       { error: error.message || "An error occurred" },

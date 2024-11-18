@@ -1,10 +1,11 @@
 "use client";
 
+import { CarType2 } from "@/models/carType";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export default function DropDownSelector() {
-  const [makes, setMakes] = useState<{ id: number; name: string }[]>([]);
+  const [makes, setMakes] = useState<CarType2[]>([]);
   const [years] = useState(() => {
     const currentYear = new Date().getFullYear();
     return Array.from(
@@ -20,7 +21,12 @@ export default function DropDownSelector() {
       try {
         const response = await fetch("/api/cars");
         const data = await response.json();
-        setMakes(data);
+        const makes = data.map((make: CarType2) => ({
+          MakeId: make.MakeId,
+          MakeName: make.MakeName,
+        }));
+
+        setMakes(makes);
       } catch (error) {
         console.error("Error fetching makes:", error);
       }
@@ -45,9 +51,9 @@ export default function DropDownSelector() {
         <option value="" disabled>
           Please change make
         </option>
-        {makes.map((make) => (
-          <option key={make.id} value={make.id}>
-            {make.name}
+        {makes.map((make: CarType2) => (
+          <option key={make.MakeId} value={make.MakeId.toString()}>
+            {make.MakeName}
           </option>
         ))}
       </select>
