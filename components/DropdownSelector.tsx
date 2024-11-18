@@ -19,7 +19,7 @@ export default function DropDownSelector() {
   useEffect(() => {
     async function fetchMakes() {
       try {
-        const response = await fetch("/api/cars");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars`);
         const data = await response.json();
         const makes = data.map((make: CarType2) => ({
           MakeId: make.MakeId,

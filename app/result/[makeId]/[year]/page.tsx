@@ -1,14 +1,12 @@
 // app/result/[makeId]/[year]/page.tsx
-import { CarType, CarType2 } from "@/models/carType";
+import { CarType } from "@/models/carType";
 import Car from "@/components/Car";
-import { Metadata } from "next";
 import { StaticParams } from "@/models/statisParamsType";
 import Link from "next/link";
-import { FC } from "react";
 
 async function getMakes() {
   try {
-    const response = await fetch("http://localhost:3000/api/cars");
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars`);
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
@@ -52,7 +50,7 @@ export default async function ResultPage({
 }) {
   const { makeId, year } = await params;
   const response = await fetch(
-    `http://localhost:3000/api/cars/${makeId}/${year}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/cars/${makeId}/${year}`,
   );
   const cars = await response.json();
 
