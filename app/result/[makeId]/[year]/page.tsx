@@ -34,7 +34,6 @@ export async function generateStaticParams() {
       year: year.toString(),
     })),
   );
-  console.log(staticParams);
   return staticParams;
 }
 
@@ -46,9 +45,10 @@ interface Props {
 export default async function ResultPage({
   params,
 }: {
-  params: Promise<StaticParams>;
+  params: Promise<Props>;
 }) {
   const { makeId, year } = await params;
+
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/cars/${makeId}/${year}`,
   );
